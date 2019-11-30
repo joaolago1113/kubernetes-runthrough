@@ -1,0 +1,21 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: hello-world-deployment
+  labels:
+    app: hello-world
+spec:
+  selector:
+    matchLabels:
+      app: hello-world
+  replicas: 10
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+      - name: 1-hello-world
+        image: lakeman/kubernetes-tutorial
+        ports:
+        - containerPort: 8080
