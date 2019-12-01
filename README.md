@@ -170,24 +170,24 @@ Enter as output format json
 
 **Install eksctl**
 ```
-   	curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-   	sudo mv /tmp/eksctl /usr/local/bin
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+sudo mv /tmp/eksctl /usr/local/bin
 ```
    	
 ### Basic Walkthrough
 
 Create the cluster:
 ```
-	eksctl create cluster \
-	--name kuber-tut-cluster \
-	--version 1.14 \
-	--region eu-west-2 \
-	--nodegroup-name kuber-tut-standard-workers \
-	--node-type t3.medium \
-	--nodes 3 \
-	--nodes-min 1 \
-	--nodes-max 4 \
-	--managed
+eksctl create cluster \
+--name kuber-tut-cluster \
+--version 1.14 \
+--region eu-west-2 \
+--nodegroup-name kuber-tut-standard-workers \
+--node-type t3.medium \
+--nodes 3 \
+--nodes-min 1 \
+--nodes-max 4 \
+--managed
 ```
 (--managed) Creates EKS-managed nodegroup
 
