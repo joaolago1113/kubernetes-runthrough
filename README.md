@@ -120,59 +120,62 @@ minikube delete
 
 ## Kubernetes Using AWS
 
-Amazon Elastic Kubernetes Service (Amazon EKS) is a managed service that makes it easy for you to run Kubernetes on AWS without needing to stand up or maintain your own Kubernetes control plane.
+We'll use the EKS service or Elastic Kubernetes Service to make it easy for us to run kubernetes on AWS without having to maintain our own kubernetes control plane.
 
 ### Requirements
 
-1) Install Python: sudo apt-get install python3
-   Install pip3: curl -O https://bootstrap.pypa.io/get-pip.py
-                 python3 get-pip.py --user
-   
-   Add binaries to PATH:
-      Add 'export PATH=~/.local/bin:$PATH' to ~/.profile and run 'source ~/.profile'.
+**Install Python**
+```
+sudo apt-get install python3
+```
+
+**Install Pip3**
+```
+curl -O https://bootstrap.pypa.io/get-pip.py
+python3 get-pip.py --user
+```
+
+Too add binaries to PATH add 'export PATH=~/.local/bin:$PATH' to ~/.profile and run 'source ~/.profile'.
       
-   Install AWS CLI: pip3 install awscli --upgrade --user
+**Install AWS CLI**
+```
+pip3 install awscli --upgrade --user
+```   
 
-   Open https://console.aws.amazon.com/iam/
-	   Go to Users
-	   Add User
-	   Enter a name and select 'Programmatic access' as the Access type.
-	   Press 'Create Group'
-	   Press 'Create policy'
-	   
-	   Add permissions for: (podesse ser mais especifico ao selectionar ações e recursos)
-	      ec2
-	      eks
-	      cloudformation
-	      iam
-	   
-	   Add name kubernetes-tut-policy
+**Create User Permissions**
 
-	   Select created policy
-	   
-	   Add name to group kubernetes-tut-group
+Open https://console.aws.amazon.com/iam/
 
-	   Select group and press 
-	   
-	   Skil tags
+  1)  Go to Users;
+  2)  Add User;
+  3)  Enter a name and select 'Programmatic access' as the Access type;
+  4)  Press 'Create Group';
+  5)  Press 'Create policy';
+  6)  Add permissions for the services: eks, ec2, cloudformation and iam;
+  7)  Add name to policy kubernetes-tut-policy
+  8)  Select created policy
+  9)  Add name to group kubernetes-tut-group
+ 10)  Select group and press 
+ 11)  Skip tags
+ 12)  Press Create User
+ 13)  Download .csv file and save somewhere safe (file wont be shown again)
+	  
+Enter in terminal: 
+```
+aws configure
+```
+Enter the 'access key id' and 'secret access key' stored on the downloaded .csv
+Enter as region: eu-west-2
+Enter as output format json
 
-	   Press Create User
-
-	   Download .csv file and save somewhere safe (file wont be shown again)
-
-
-   Type in terminal: aws configure
-   Enter the 'access key id' and 'secret access key' stored on the downloaded .csv
-   Enter as region: eu-west-2
-   Enter as output format json
-
-   Install eksctl: 
+**Install eksctl**
    	curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/latest_release/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
    	sudo mv /tmp/eksctl /usr/local/bin
    	
 ### Basic Walkthrough
 
-   Create cluster:
+Create the cluster:
+```
 	eksctl create cluster \
 	--name kuber-tut-cluster \
 	--version 1.14 \
@@ -183,25 +186,46 @@ Amazon Elastic Kubernetes Service (Amazon EKS) is a managed service that makes i
 	--nodes-min 1 \
 	--nodes-max 4 \
 	--managed
+```
+(--managed) Creates EKS-managed nodegroup
 
-    (--managed) %Creates EKS-managed nodegroup
+Check that the cluster is created on: https://eu-west-2.console.aws.amazon.com/ecs
+Check that the cloudformation is created on: https://eu-west-2.console.aws.amazon.com/cloudformation
 
-Check cluster is created on https://eu-west-2.console.aws.amazon.com/ecs
-Check cloudformation is created on https://eu-west-2.console.aws.amazon.com/cloudformation
+Navigate the terminal to the root of this repository.
+Enter into terminal: 
+```
+kubectl apply -f ./aws/hello-world-replicaset.yaml
+```
+(file uses public docker image of server)
 
-Enter into terminal: kubectl apply -f hello-world-replicaset.yaml
-(file uses my public docker image of server)
-Enter into terminal: kubectl apply -f hello-world-service.yaml
+Enter into terminal: 
+```
+kubectl apply -f ./aws/hello-world-service.yaml
+```
 
-Enter into terminal: kubectl get pods
-See all 10 replica pods running
+Enter into terminal: 
+```
+kubectl get pods
+```
+All 10 replica pods should be running since the hello-world-replicaset.yaml file specifies replication of 10.
 
-Enter into terminal: kubectl get services -o wide
-Enter into browser external IP of hello-world service plus the port :8080
+Enter into terminal: 
+```
+kubectl get services -o wide
+```
+Copy the external IP address, and add at the end of the addess the server port 8080. 
+Enter into terminal: 
+```
+curl <EXTERNAL IP ADDRESS>:8080
+```
+If everything is working the above command should output "Hello World!"
 
+### Deploy the metrics server
 
-DEPLOY METRICS SERVER
-
+To view the statistics of our AWS cluster on a dashboard like we did with minikube, we have to deploy the metrics server.
+Do do so execute the following commands:
+```
 curl -o v0.3.6.tar.gz https://github.com/kubernetes-sigs/metrics-server/archive/v0.3.6.tar.gz
 
 tar -xzf v0.3.6.tar.gz
@@ -212,15 +236,21 @@ kubectl get deployment metrics-server -n kube-system
 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta4/aio/deploy/recommended.yaml
 
-kubectl apply -f eks-admin-service-account.yaml
+kubectl apply -f ./aws/eks-admin-service-account.yaml
 
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep eks-admin | awk '{print $1}')
-copy the code after 'token:'
+```
+Copy the code after 'token:' outputted into the terminal.
 
+Finally execute:
+```
 kubectl proxy
-
-Go to: http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#!/login
-Enter previously copied token and sign in
+```
+Enter into a browser the address:
+```
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#!/login
+```
+Select Token, enter the previosuly copied token into the textarea and Sign In.
 
 
    		   
