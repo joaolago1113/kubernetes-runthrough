@@ -75,6 +75,8 @@ On the same terminal run the command:
 ```
 curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAME:8080/proxy/
 ```
+Close the proxy by closing the terminal it is running on.
+
 To execute commands inside the container of the pod we can use the 'kubectl exec' command. 
 ```
 kubectl exec $POD_NAME -- curl -s http://localhost:8080
