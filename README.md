@@ -189,7 +189,6 @@ eksctl create cluster \
 --nodes-max 4 \
 --managed
 ```
-(--managed) Creates EKS-managed nodegroup
 
 Check that the cluster is created on: https://eu-west-2.console.aws.amazon.com/ecs
 Check that the cloudformation is created on: https://eu-west-2.console.aws.amazon.com/cloudformation
