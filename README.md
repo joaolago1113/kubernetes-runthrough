@@ -104,7 +104,7 @@ To check all running pods, deployments, services and other information on the cl
 minikube dashboard
 ```
 
-To delete the pods you first have to delete the service and then the deployment, since the deployment has a set minimum of pods that it runs, the deleted pods will just be replaced.
+To delete the pods you first have to delete the service and then the deployment, since the deployment has a set minimum of pods that it runs, the deleted pods will just be replaced while the deployment is running.
 ```
 kubectl delete svc kubernetes-tut
 kubectl delete deployment kubernetes-tut
