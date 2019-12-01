@@ -5,6 +5,7 @@ Minikube is used as an easy tool to run Kubernetes locally. Minikube runs a clus
 ### Requirements
 
 **Install docker**
+
 Follow the tutorial: https://docs.docker.com/install/linux/docker-ce/ubuntu/
 
 **Install kubectl**
