@@ -71,6 +71,7 @@ Now open a second terminal and run the following command to get the created pod'
 export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
 ```
 Now you'll be able to comunicate directly with the pod.
+On the same terminal run the command:
 ```
 curl http://localhost:8001/api/v1/namespaces/default/pods/$POD_NAME:8080/proxy/
 ```
