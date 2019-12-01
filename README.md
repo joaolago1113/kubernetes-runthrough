@@ -90,7 +90,7 @@ kubectl expose deployment/kubernetes-tut --type="NodePort" --port 8080
 ```
 
 Since minikube runs a cluster on a virtual machine, the VM is exposed to the host system via an IP address that can be obtained with the 'minikube ip' command.
-To find out the exposed port of the service we can run 'kubectl get svc' and see check port under PORT, or we can run the follwing command to get the port in the shell variable SVC_PORT:
+To find out the exposed port of the service we can run 'kubectl get svc' and see the port under PORT, or we can run the follwing command to get the port in the shell variable SVC_PORT:
 ```
 export SVC_PORT=$(kubectl get services/kubernetes-tut -o go-template='{{(index .spec.ports 0).nodePort}}')
 ```
